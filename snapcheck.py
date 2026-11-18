@@ -229,12 +229,10 @@ def flatten_model(main, files, lib):
     walk(main, np.eye(3), np.zeros(3), 0)
     return out
 
-def analyse(path, shadow_root, ldraw_root=None):
-    text = Path(path).read_text(errors='replace').lstrip('﻿')
-    main, files = split_mpd(text)
-    lib = Library(files, Shadow(shadow_root), ldraw_root)
-    parts = flatten_model(main, files, lib)
-    placed, nosnap = [], []
+def analyse_links(parts, lib, nosnap=None):
+    """Connexions (i, j, type) entre pièces posées."""
+    nosnap = [] if nosnap is None else nosnap
+    placed = []
     for i, p in enumerate(parts):
         ss = lib.snaps_inferred(p['part'])
         if not ss: nosnap.append(p['part'])
@@ -278,6 +276,15 @@ def analyse(path, shadow_root, ldraw_root=None):
             if roots[i] == roots[k] or boxes[i] is None: continue
             ov = np.minimum(boxes[k][1], boxes[i][1]) - np.maximum(boxes[k][0], boxes[i][0])
             if (ov > 1.5).all(): con.append((min(i, k), max(i, k), 'contact')); break
+    return con
+
+def analyse(path, shadow_root, ldraw_root=None):
+    text = Path(path).read_text(errors='replace').lstrip('﻿')
+    main, files = split_mpd(text)
+    lib = Library(files, Shadow(shadow_root), ldraw_root)
+    parts = flatten_model(main, files, lib)
+    nosnap = []
+    con = analyse_links(parts, lib, nosnap)
     # composantes connexes
     par = list(range(len(parts)))
     def find(x):

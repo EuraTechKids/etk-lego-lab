@@ -45,12 +45,28 @@ Ce qu'il fait :
 | FightBot | 113 | 156 | 0 | 0 |
 | toupiSpinner | 70 | 107 | 0 | 0 |
 
+## collide.py — pièces qui se traversent
+`python3 collide.py modele.ldr [--seuil 700]`
+- Chaque type de pièce est voxelisé une fois (cubes de 1 LDU, remplissage par parité sur 3 axes, vote 2/3) puis érodé de 1 LDU : on tolère un serrage de 2 LDU (tenon dans un creux, pneu sur jante).
+- Paires testées : boîtes orientées qui se chevauchent, sauf les liaisons axe/cheville (l'axe entre dans la pièce, c'est normal).
+- Alerte si le volume commun dépasse 700 LDU³ (≈ 1/9 d'une plaque 1×2).
+- Résultats (tests/resultats-collisions.txt), environ 20 s pour les 20 modèles :
+  - 12 robots sur 13 : 0 collision. Les modèles générés (Bolide, tracteurs) : 0.
+  - **Chrismastree** : les axes 87083 et 4519 sont sur la même ligne et se chevauchent de 24 LDU. C'est une vraie erreur du fichier Studio, impossible à monter tel quel.
+  - Contre-test `tests/modeles/test-collision.ldr` (brique 3700 en double, décalée de 10 LDU) : détecté, 1 476 LDU³.
+
+## anchors.py — points d'accroche libres
+`python3 anchors.py modele.ldr [...] --json sortie.json`
+- Types : tenon, creux (dessous d'une brique ou plaque), trou (trou Technic rond), trou-axe, axe, cheville, rotule.
+- Un point est libre s'il n'a aucun partenaire compatible et si aucune autre pièce n'occupe sa place.
+- Les tubes sous les plaques et les gorges de poulie sont ignorés.
+- `modules/ancres.json` liste les accroches libres (position, direction, pièce) des 42 modules. C'est la base du générateur v2.
+
 ## Limites connues
-- Pas encore de détection des collisions réelles (pièces qui se traversent).
 - Les liaisons « contact » sont une approximation à surveiller.
 - Pas de fiche de connexion LDCad pour : pneus 56891 / 92402, engrenage 32270 (gérés par règles de secours).
+- Collisions : la sortie du moteur 21980 est pleine dans le modèle 3D. Un axe qui y entre sans être reconnu comme relié donne un faux volume (≈ 600 LDU³, sous le seuil).
 
 ## Prochaines étapes
-1. Détection des collisions (maillages).
-2. Passer les 13 robots de Mathieu au vérificateur, puis les découper en modules avec points d'accroche.
-3. Générateur v2 : assemblage de modules par points d'accroche, vérification automatique.
+1. Générateur v2 : assemblage de modules par points d'accroche libres, avec vérification automatique (snapcheck + collide).
+2. Boucle de retour : Mathieu note les modèles générés, et les règles sont ajustées dans KNOWLEDGE.md.

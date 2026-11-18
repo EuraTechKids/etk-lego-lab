@@ -37,3 +37,11 @@ Pièces les plus utilisées : cheville 2780 (×50), plaque 1×2 3023 (×37), pen
 - **roue** : RobotLogoEuratechKids/submodel group 2 (2 p)
 - **structure/déco** : Chrismastree/submodel group 11 (21 p), Chrismastree/submodel group 2 (10 p), Chrismastree/submodel group 3 (7 p), Chrismastree/submodel group 5 (5 p), Chrismastree/submodel group 6 (8 p), Chrismastree/submodel group 7 (2 p), Chrismastree/submodel group 8 (2 p), Chrismastree/submodel group 9 (2 p), Chrismastree/submodel group 10 (2 p), Monkey/1 (4 p), Monkey/2 (4 p), SantaFarm/submodel group 1 (6 p), SantaFarm/submodel group 3 (2 p), SantaFarm/submodel group 2 (5 p), VernyWedo/submodel group 2 (3 p), VernyWedo/submodel group 4 (7 p), VernyWedo/submodel group 5 (7 p), follow_BlackLine/submodel group 4 (2 p), moto1/submodel group 1 (4 p), walkbotgenerator/submodel group 1 (5 p), walkbotgenerator/submodel group 2 (5 p)
 - **yeux/visage** : MadRobot/submodel group 2 (5 p), Monkey/eyes (4 p), santaskiing/submodel group 2 (30 p)
+
+## Vérifications obligatoires d'un modèle généré
+1. `snapcheck.py` : 0 îlot.
+2. `collide.py` : 0 collision (seuil 700 LDU³).
+3. `anchors.py` : pour assembler deux modules, relier un point **libre** de chacun (tenon↔creux, axe↔trou/trou-axe, cheville↔trou), directions opposées et alignées.
+
+## Erreurs repérées dans la galerie
+- Chrismastree : axes 87083 et 4519 sur la même ligne, chevauchement de 24 LDU (à corriger dans Studio).
