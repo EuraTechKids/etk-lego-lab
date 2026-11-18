@@ -62,6 +62,17 @@ Ce qu'il fait :
 - Les tubes sous les plaques et les gorges de poulie sont ignorés.
 - `modules/ancres.json` liste les accroches libres (position, direction, pièce) des 42 modules. C'est la base du générateur v2.
 
+## Variantes du générateur (variants.py + studio3d/gen.js)
+Chaque variante garde le mécanisme (moteur, transmission, roues) mais change la carrosserie :
+- **arrière du bolide** : patin, ou essieu à 2 petites roues (bolide 4 roues) ;
+- **style** tiré au hasard (costaud, futuriste, chantier, course, fantaisie), qui oriente le choix des ajouts ;
+- **ajouts** (17 types : blocs, tourelles, feux, radars, ailes, pentes, briques Technic…) posés par paires symétriques sur les tenons libres ;
+- **2e étage** : un ajout peut en porter un autre, dans la hauteur libre mesurée au-dessus ;
+- jamais deux fois le même nombre de pièces ni la même combinaison pour un même réglage (historique dans le Studio).
+
+Chaîne : `node tools/bases.mjs` (bases sans ajouts) → `python3 variants.py` (poses pré-vérifiées : appui complet sur des tenons libres, aucune collision avec la base, symétrique ; hauteur libre au-dessus) → `studio3d/variants.json` (136 Ko), intégré par `python3 tools/build.py modele.ldr sortie.html`.
+Contrôle : `node tools/variantes-test.mjs 10 && python3 tools/verifie-variantes.py` → 120 variantes, 0 îlot, 0 collision (18/11/2026). Aperçu : `python3 tools/apercu.py sortie.png modele.ldr…`.
+
 ## Limites connues
 - Les liaisons « contact » sont une approximation à surveiller.
 - Pas de fiche de connexion LDCad pour : pneus 56891 / 92402, engrenage 32270 (gérés par règles de secours).

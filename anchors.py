@@ -23,7 +23,7 @@ def kind(s):
         return None
     if any(x[0] == 'A' for x in secs): return 'trou-axe'
     if 8 in rad and 6 in rad: return 'trou'
-    if rad == {6}: return 'creux'
+    if 6 in rad and max(rad) <= 6: return 'creux'
     return None
 
 def used_mask(placed, tol=1.2):

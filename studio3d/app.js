@@ -955,9 +955,14 @@ async function ensurePartsFor(ldr) {
     try { const r = await fetch('/_blob/' + id); if (r.ok) loadPack(await r.json()); } catch (e) {}
   }
 }
+// Variantes déjà proposées (par réglage) : jamais le même nombre de pièces ni la même combinaison
+const genHist = {};
 async function runGenerator(opts) {
   genOpts = opts;
-  const r = RobotGen.generate(opts);
+  const hk = [opts.form, opts.drive, opts.size].join('|');
+  const h = genHist[hk] || (genHist[hk] = { avoid: [], avoidSig: [] });
+  const r = RobotGen.generate(Object.assign({}, opts, { avoid: h.avoid, avoidSig: h.avoidSig }));
+  h.avoid.push(r.nParts); h.avoidSig.push(r.sig);
   await ensurePartsFor(r.ldr);
   await startDraft(r.ldr, r.name, null);
   $('#dName').value = r.name; $('#dDesc').value = r.desc;

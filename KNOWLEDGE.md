@@ -45,3 +45,8 @@ Pièces les plus utilisées : cheville 2780 (×50), plaque 1×2 3023 (×37), pen
 
 ## Erreurs repérées dans la galerie
 - Chrismastree : axes 87083 et 4519 sur la même ligne, chevauchement de 24 LDU (à corriger dans Studio).
+
+## Variantes (ce qui marche)
+- Dans le kit WeDo, il reste peu de grosses briques une fois la base construite (2 à 4 briques 2×4, 2 briques 1×4, 2 à 4 briques Technic). Le volume ajouté est donc limité : la variété vient surtout de la disposition et du 2e étage.
+- Le bolide accepte l'essieu arrière du tracteur (3710 + 3010 + 3701 + axe 44294 + petites roues). Les feux 3062b passent alors en z 150 sur les plaques.
+- Le tube central sous une brique (section de rayon 4) n'est pas un emplacement de tenon.
