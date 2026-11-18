@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Studio 3D EuraTech'Kids — Visionneuse LEGO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#f3f5f8; --panel:#fff; --ink:#1d2433; --muted:#6b7385; --line:#e3e7ee; --acc:#e3000b; --acc2:#0b6bcb; --ok:#1f9d55; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; font-family:Nunito,system-ui,sans-serif; color:var(--ink); background:var(--bg); }
+  body { display:flex; flex-direction:column; }
+  header { display:flex; align-items:center; gap:14px; padding:10px 16px; background:var(--panel); border-bottom:1px solid var(--line); }
+  .logo { width:34px; height:34px; display:grid; grid-template-columns:1fr 1fr; gap:3px; padding:4px; background:#1d2433; border-radius:8px; transform:rotate(45deg); }
+  .logo i { border-radius:50%; } .logo i:nth-child(1){background:#36aebf}.logo i:nth-child(2){background:#e3000b}.logo i:nth-child(3){background:#58ab41}.logo i:nth-child(4){background:#fac80a}
+  h1 { font-size:18px; margin:0; font-weight:800; } h1 small { display:block; font-weight:600; font-size:12px; color:var(--muted); }
+  header .sp { flex:1; }
+  .btn { font:inherit; font-weight:700; font-size:13px; border:1px solid var(--line); background:#fff; color:var(--ink); padding:7px 12px; border-radius:9px; cursor:pointer; white-space:nowrap; }
+  .btn:hover { border-color:#c5ccd8; } .btn.pri { background:var(--acc); color:#fff; border-color:var(--acc); } .btn.on { background:#1d2433; color:#fff; border-color:#1d2433; }
+  .btn:disabled { opacity:.4; cursor:default; }
+  main { flex:1; display:flex; min-height:0; }
+  #stage { position:relative; flex:1; min-width:0; }
+  #c3d { width:100%; height:100%; display:block; touch-action:none; }
+  #drop { position:absolute; inset:12px; border:3px dashed var(--acc2); border-radius:16px; background:rgba(11,107,203,.08); display:none; align-items:center; justify-content:center; font-weight:800; font-size:20px; color:var(--acc2); pointer-events:none; }
+  #stage.drag #drop { display:flex; }
+  .hud { position:absolute; left:12px; top:12px; display:flex; flex-direction:column; gap:6px; }
+  .chip { background:rgba(255,255,255,.92); border:1px solid var(--line); border-radius:999px; padding:5px 11px; font-size:12px; font-weight:700; box-shadow:0 1px 3px rgba(0,0,0,.05); }
+  .chip.warn { color:#9a5b00; } .chip.ok { color:var(--ok); }
+  .views { position:absolute; right:12px; top:12px; display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; max-width:60%; }
+  #tip { position:absolute; pointer-events:none; background:#1d2433; color:#fff; font-size:12px; padding:5px 9px; border-radius:7px; display:none; white-space:nowrap; }
+  .stepbar { position:absolute; left:12px; right:12px; bottom:12px; background:rgba(255,255,255,.95); border:1px solid var(--line); border-radius:14px; padding:10px 12px; display:flex; align-items:center; gap:10px; }
+  .stepbar input[type=range] { flex:1; accent-color:var(--acc); }
+  .stepnum { font-weight:800; min-width:110px; text-align:center; font-size:14px; }
+  aside { width:330px; background:var(--panel); border-left:1px solid var(--line); display:flex; flex-direction:column; min-height:0; }
+  .tabs { display:flex; border-bottom:1px solid var(--line); }
+  .tabs button { flex:1; font:inherit; font-weight:800; font-size:13px; padding:11px 4px; background:none; border:none; border-bottom:3px solid transparent; cursor:pointer; color:var(--muted); }
+  .tabs button.on { color:var(--ink); border-bottom-color:var(--acc); }
+  .pane { flex:1; overflow:auto; padding:14px; display:none; } .pane.on { display:block; }
+  h3 { font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin:16px 0 8px; } h3:first-child { margin-top:0; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:8px; }
+  .plist { list-style:none; margin:0; padding:0; }
+  .plist li { display:flex; align-items:center; gap:9px; padding:7px 4px; border-bottom:1px solid var(--line); font-size:13px; cursor:pointer; }
+  .plist li:hover { background:#f6f8fb; }
+  .sw { width:20px; height:20px; border-radius:5px; border:1px solid rgba(0,0,0,.18); flex:none; }
+  .plist .nm { flex:1; line-height:1.2; } .plist .nm small { display:block; color:var(--muted); font-size:11px; }
+  .qty { font-weight:800; font-size:14px; }
+  .note { font-size:12.5px; color:var(--muted); line-height:1.45; background:#f6f8fb; border-radius:10px; padding:10px; }
+  .note b { color:var(--ink); }
+  .stat { display:flex; justify-content:space-between; font-size:13px; padding:4px 0; }
+  .bar { height:6px; background:var(--line); border-radius:4px; overflow:hidden; margin:6px 0; } .bar i { display:block; height:100%; width:0; background:var(--acc2); }
+  .bgs { display:flex; gap:8px; } .bgs button { width:30px; height:30px; border-radius:8px; border:2px solid var(--line); cursor:pointer; }
+  .bgs button.on { border-color:var(--ink); }
+  .bgs .tr { background:repeating-conic-gradient(#ddd 0 25%, #fff 0 50%) 0 0/10px 10px; }
+  label.ck { display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; margin:6px 0; cursor:pointer; }
+  #modal { position:fixed; inset:0; background:rgba(20,24,34,.55); display:none; align-items:center; justify-content:center; z-index:10; padding:20px; }
+  #modal.on { display:flex; }
+  .mbox { background:#fff; border-radius:16px; padding:16px; max-width:min(900px,100%); max-height:100%; display:flex; flex-direction:column; gap:10px; }
+  .mbox img { max-width:100%; max-height:62vh; object-fit:contain; border-radius:10px; background:repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 0 0/16px 16px; }
+  input[type=file] { display:none; }
+  @media (max-width: 820px) { main { flex-direction:column; } aside { width:auto; height:42%; border-left:none; border-top:1px solid var(--line); } header h1 small { display:none; } }
+
+  #gallery { flex:1; overflow:auto; display:none; }
+  body.gal #gallery { display:block; } body.gal main, body.gal #draftBar { display:none !important; } body.gal .vonly { display:none; }
+  body:not(.gal) .gonly { display:none; }
+  .gwrap { max-width:1150px; margin:0 auto; padding:26px 20px 40px; }
+  .ghead { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:18px; flex-wrap:wrap; }
+  .ghead h2 { margin:0 0 4px; font-size:26px; font-weight:800; } .ghead p { margin:0; color:var(--muted); }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:18px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:18px; overflow:hidden; cursor:pointer; text-decoration:none; color:inherit; display:flex; flex-direction:column; transition:transform .15s, box-shadow .15s; }
+  .card:hover { transform:translateY(-3px); box-shadow:0 10px 24px rgba(29,36,51,.10); }
+  .card .th { aspect-ratio:1; background:radial-gradient(circle at 50% 40%, #ffffff 0, #eaf1fb 70%); display:flex; align-items:center; justify-content:center; }
+  .card .th img { width:88%; height:88%; object-fit:contain; } .card .th .ph { font-size:64px; opacity:.5; }
+  .card .bd { padding:12px 14px 14px; } .card .bd b { font-size:16px; display:block; } .card .bd span { font-size:12.5px; color:var(--muted); }
+  .card .bd p { margin:6px 0 0; font-size:13px; color:var(--ink); line-height:1.35; }
+  .empty { grid-column:1/-1; text-align:center; color:var(--muted); padding:40px; }
+  #draftBar { display:none; align-items:center; gap:10px; padding:10px 16px; background:#fff8e1; border-bottom:1px solid #f1dfa6; flex-wrap:wrap; }
+  #draftBar.on { display:flex; }
+  #draftBar input { font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--line); border-radius:9px; }
+  #dMsg { font-size:12.5px; }
+  #illu { position:fixed; inset:0; background:rgba(20,24,34,.6); display:none; align-items:center; justify-content:center; z-index:11; padding:16px; }
+  #illu.on { display:flex; }
+  .ibox { background:#fff; border-radius:18px; padding:16px; display:flex; gap:18px; max-width:min(1100px,100%); max-height:100%; overflow:auto; }
+  .iprev { flex:1; min-width:0; display:flex; align-items:center; justify-content:center; background:#f3f5f8; border-radius:12px; padding:10px; }
+  .iprev canvas { max-width:100%; max-height:72vh; border-radius:8px; box-shadow:0 6px 20px rgba(0,0,0,.12); }
+  .iopts { width:270px; flex:none; display:flex; flex-direction:column; gap:6px; }
+  .iopts input[type=text] { font:inherit; font-size:13px; padding:7px 10px; border:1px solid var(--line); border-radius:9px; width:100%; }
+  .seg { display:flex; gap:6px; flex-wrap:wrap; } .seg button.on { background:#1d2433; color:#fff; border-color:#1d2433; }
+  .bigsw { width:46px; height:46px; border-radius:12px; border:3px solid transparent; cursor:pointer; }
+  .bigsw.on { border-color:#1d2433; }
+  @media (max-width:820px){ .ibox{flex-direction:column;} .iopts{width:auto;} }
+  #vid { position:fixed; inset:0; background:rgba(20,24,34,.55); display:none; align-items:center; justify-content:center; z-index:12; padding:16px; }
+  #vid.on { display:flex; } #vid.running { background:transparent; pointer-events:none; align-items:flex-start; }
+  #vid.running .vbox { display:none; } #vidBar { display:none; pointer-events:auto; margin-top:70px; background:#1d2433; color:#fff; border-radius:999px; padding:8px 10px 8px 16px; align-items:center; gap:12px; font-weight:700; font-size:13px; box-shadow:0 6px 18px rgba(0,0,0,.25); }
+  #vid.running #vidBar { display:flex; }
+  .vbox { background:#fff; border-radius:18px; padding:18px; width:min(560px,100%); max-height:100%; overflow:auto; display:flex; flex-direction:column; gap:6px; }
+  .vbox video { width:100%; border-radius:10px; background:#000; max-height:46vh; }
+  .rec { width:10px; height:10px; border-radius:50%; background:#ff3b30; animation:blink 1s infinite; } @keyframes blink { 50% { opacity:.2; } }
+  .soon { font-size:10.5px; font-weight:800; background:#fff3c4; color:#9a5b00; border-radius:6px; padding:1px 5px; margin-left:4px; }
+  .seg button:disabled { opacity:.55; }
+  #toast { position:fixed; left:50%; bottom:22px; transform:translate(-50%,20px); background:#1d2433; color:#fff; padding:10px 16px; border-radius:12px; font-weight:700; font-size:13.5px; max-width:min(720px,92vw); box-shadow:0 8px 24px rgba(0,0,0,.25); opacity:0; pointer-events:none; transition:.25s; z-index:30; }
+  #toast.on { opacity:1; transform:translate(-50%,0); }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><i></i><i></i><i></i><i></i></div>
+  <h1><span id="mtitle">Les robots EuraTech'Kids</span><small id="msub">Visionneuse 3D LEGO — EuraTech'Kids</small></h1>
+  <div class="sp"></div>
+  <button class="btn vonly" id="bGallery">← Tous les robots</button>
+  <button class="btn vonly" id="bOpen">📂 Ouvrir un modèle</button>
+  <button class="btn vonly" id="bShot">📸 Capturer</button>
+  <button class="btn pri vonly" id="bIllu">🎨 Illustration</button>
+  <button class="btn pri vonly" id="bVid">🎬 Vidéo</button>
+  <input type="file" id="fModel" accept=".io,.ldr,.mpd,.dat,.txt" multiple>
+  <input type="file" id="fIoCam" accept=".io">
+  <input type="file" id="fZip" accept=".zip">
+  <input type="file" id="fDir" webkitdirectory directory multiple>
+</header>
+<section id="gallery"><div class="gwrap">
+  <div class="ghead"><div><h2>Les robots EuraTech'Kids</h2><p>Choisis un robot pour le faire tourner en 3D et suivre son montage étape par étape. Tu peux aussi glisser tes fichiers <b>.io</b> ici.</p></div>
+    <div class="row" style="margin:0"><button class="btn" id="bDesign">🛠 Concevoir un robot</button><button class="btn pri" id="bAdd" style="display:none" title="Un ou plusieurs fichiers .io (Studio) ou .ldr">➕ Ajouter des robots</button></div></div>
+  <div class="note" id="gstat" style="display:none;margin-bottom:14px"></div>
+  <div class="grid" id="grid"><div class="empty">Chargement de la galerie…</div></div>
+</div></section>
+<div id="draftBar">
+  <b>Nouveau robot</b>
+  <input id="dName" placeholder="Nom du robot" maxlength="60">
+  <input id="dDesc" placeholder="Petite description (facultatif)" maxlength="140" style="flex:1;min-width:180px">
+  <button class="btn" id="bReroll" style="display:none">🎲 Autre variante</button>
+  <button class="btn pri" id="bPublish">Publier dans la galerie</button>
+  <button class="btn" id="bCancel">Annuler</button>
+  <span id="dMsg"></span>
+</div>
+<main>
+  <div id="stage">
+    <canvas id="c3d"></canvas>
+    <div id="drop">Dépose ton fichier .io / .ldr / .mpd (ou complete.zip)</div>
+    <div class="hud"><span class="chip" id="mode">Aperçu simplifié</span><span class="chip" id="pinfo"></span></div>
+    <div class="views">
+      <button class="btn" data-v="iso">3/4</button><button class="btn" data-v="front">Face</button>
+      <button class="btn" data-v="side">Côté</button><button class="btn" data-v="back">Dos</button><button class="btn" data-v="top">Dessus</button>
+      <button class="btn" id="bSpin">⟳ Rotation</button>
+      <button class="btn pri" id="bThumb2" style="display:none">📌 Cette vue comme vignette</button>
+    </div>
+    <div id="tip"></div>
+    <div class="stepbar">
+      <button class="btn" id="bFirst" title="Début">⏮</button>
+      <button class="btn" id="bPrev">◀</button>
+      <div class="stepnum" id="stepnum">Étape –</div>
+      <button class="btn" id="bNext">▶</button>
+      <input type="range" id="slider" min="1" max="1" value="1">
+      <button class="btn" id="bPlay">▶ Lecture</button>
+      <button class="btn" id="bAll">Modèle complet</button>
+    </div>
+  </div>
+  <aside>
+    <div class="tabs"><button data-t="step" class="on">Étape</button><button data-t="inv">Pièces</button><button data-t="render">Rendu</button></div>
+    <div class="pane on" id="p-step">
+      <h3>Pièces à ajouter</h3>
+      <ul class="plist" id="stepList"></ul>
+      <label class="ck" style="margin-top:12px"><input type="checkbox" id="ckHi" checked> Mettre en évidence les nouvelles pièces</label>
+      <label class="ck" id="camRow" style="display:none"><input type="checkbox" id="ckCam" checked> Angles de la notice Studio</label>
+    </div>
+    <div class="pane" id="p-inv">
+      <div class="stat"><span>Pièces au total</span><b id="sTot">–</b></div>
+      <div class="stat"><span>Références différentes</span><b id="sRef">–</b></div>
+      <div class="stat"><span>Étapes</span><b id="sSteps">–</b></div>
+      <h3>Inventaire</h3>
+      <div class="row"><button class="btn" id="bCopyInv">Copier la liste</button></div>
+      <ul class="plist" id="invList"></ul>
+    </div>
+    <div class="pane" id="p-render">
+      <h3>Rendu fidèle (bibliothèque LDraw)</h3>
+      <div class="note" id="libNote">
+        Sans bibliothèque, les pièces sont <b>approximées</b> (blocs, cylindres). Pour la vraie forme des pièces,
+        charge une fois la bibliothèque <b>LDraw</b> : le dossier <b>ldraw</b> du dossier d'installation de Studio,
+        ou le fichier <b>complete.zip</b> de library.ldraw.org. Les pièces utilisées sont ensuite gardées dans ce navigateur.
+      </div>
+      <div class="row" style="margin-top:10px"><button class="btn" id="bDir">📁 Dossier ldraw</button><button class="btn" id="bZip">🗜 complete.zip</button></div>
+      <div class="bar"><i id="libBar"></i></div>
+      <div style="font-size:12px;color:var(--muted)" id="libStat"></div>
+      <div style="font-size:12px;color:#9a5b00;margin-top:6px;word-break:break-word" id="missStat"></div>
+      <div id="shareBox" style="display:none;margin-top:12px">
+        <div class="note">Le rendu fidèle est prêt <b>sur cet ordinateur</b>. Pour que tout le monde (élèves, iPad…) le voie sans rien charger,
+          enregistre les pièces de ce modèle dans la page, puis dis à Claude « pack enregistré ».</div>
+        <div class="row" style="margin-top:8px"><button class="btn pri" id="bPackUp">☁️ Enregistrer les pièces dans la page</button>
+          <button class="btn" id="bPackDl">⬇ Télécharger le pack</button></div>
+        <div style="font-size:12px" id="packMsg"></div>
+      </div>
+      <div id="adminBox" style="display:none">
+        <h3>Galerie</h3>
+        <div class="row"><button class="btn" id="bThumb">🖼 Mettre à jour la vignette</button><button class="btn" id="bIoCam">📐 Importer les angles (.io)</button><button class="btn" id="bDel">🗑 Retirer de la galerie</button></div>
+        <div style="font-size:12px;color:var(--muted)" id="adminMsg">Tourne le robot dans l'angle que tu veux, puis clique : la vignette reprend exactement cette vue (robot complet).</div>
+      </div>
+      <h3>Apparence</h3>
+      <div class="row"><span style="font-size:13px;font-weight:600;width:70px">Fond</span>
+        <div class="bgs" id="bgs">
+          <button data-bg="#ffffff" style="background:#fff" class="on"></button>
+          <button data-bg="#eef1f5" style="background:#eef1f5"></button>
+          <button data-bg="#cfe6ff" style="background:#cfe6ff"></button>
+          <button data-bg="#fff3c4" style="background:#fff3c4"></button>
+          <button data-bg="#1d2433" style="background:#1d2433"></button>
+          <button data-bg="transparent" class="tr" title="Transparent (pour les captures)"></button>
+        </div>
+      </div>
+      <label class="ck"><input type="checkbox" id="ckEdge" checked> Contours des pièces (style notice)</label>
+      <label class="ck"><input type="checkbox" id="ckGround" checked> Ombre au sol</label>
+      <h3>Capture</h3>
+      <div class="row"><span style="font-size:13px;font-weight:600">Qualité</span>
+        <select id="selRes" class="btn"><option value="1">Écran</option><option value="2" selected>HD ×2</option><option value="3">Affiche ×3</option></select></div>
+      <div class="note">Astuce : fond transparent + capture HD = visuel prêt pour une affiche, une fiche élève ou un post.</div>
+    </div>
+  </aside>
+</main>
+<div id="modal"><div class="mbox">
+  <b>Ta capture</b>
+  <img id="shot" alt="Capture du modèle">
+  <div style="font-size:12.5px;color:var(--muted)">Pour l'enregistrer : clic droit → « Enregistrer l'image » (appui long sur iPad), ou copie-la directement.</div>
+  <div class="row"><button class="btn pri" id="bSaveImg">⬇ Télécharger le PNG</button><button class="btn" id="bCopyImg">Copier l'image</button><button class="btn" id="bClose">Fermer</button><span id="copyMsg" style="font-size:12px;color:var(--ok)"></span></div>
+</div></div>
+
+<div id="design" class="vid-like" style="position:fixed;inset:0;background:rgba(20,24,34,.55);display:none;align-items:center;justify-content:center;z-index:12;padding:16px">
+  <div class="vbox">
+    <b style="font-size:17px">🛠 Concevoir un robot avec le kit WeDo 2.0</b>
+    <div style="font-size:12.5px;color:var(--muted)">Réponds à 4 questions : le robot est construit uniquement avec les pièces du kit 45300, à partir de montages déjà vérifiés.</div>
+    <h3>Âge des élèves</h3>
+    <div class="seg" id="gAge"><button class="btn on" data-v="7-9">7-9 ans</button><button class="btn" data-v="9-11">9-11 ans</button><button class="btn" data-v="11+">11 ans et +</button></div>
+    <h3>Nombre de pièces</h3>
+    <div class="seg" id="gSize"><button class="btn" data-v="petit">Moins de 30</button><button class="btn on" data-v="moyen">Environ 50</button><button class="btn" data-v="grand">60 et +</button></div>
+    <h3>Forme du véhicule</h3>
+    <div class="seg" id="gForm"><button class="btn on" data-v="tracteur">🚜 Tracteur (4 roues)</button><button class="btn" data-v="bolide">🏎️ Bolide (2 roues + patin)</button></div>
+    <h3>Transmission</h3>
+    <div class="seg" id="gDrive"><button class="btn on" data-v="engrenages">⚙️ Engrenages</button><button class="btn" data-v="elastique">➰ Élastique</button></div>
+    <h3>Type de robot</h3>
+    <div class="seg" id="gType"><button class="btn on" data-v="vehicule">🚗 Véhicule roulant</button><button class="btn" data-v="animal" disabled>🐢 Animal<span class="soon">bientôt</span></button><button class="btn" data-v="machine" disabled>🏗️ Machine à pince<span class="soon">bientôt</span></button></div>
+    <h3>Nom (facultatif)</h3>
+    <input type="text" id="gName" placeholder="Laisse vide pour un nom surprise" style="font:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:9px">
+    <div class="row" style="margin-top:10px"><button class="btn pri" id="gGo">✨ Générer le robot</button><button class="btn" id="gClose">Fermer</button></div>
+    <div style="font-size:12px;color:var(--muted)">L'élastique ajoute environ 7 pièces (poulies + axe des roues) et protège le moteur : il patine si le robot est bloqué. Animal et machine arrivent bientôt.</div>
+  </div>
+</div>
+<div id="toast"></div>
+<div id="illu"><div class="ibox">
+  <div class="iprev"><canvas id="illuCv"></canvas></div>
+  <div class="iopts">
+    <b style="font-size:16px">Illustration du robot</b>
+    <div style="font-size:12px;color:var(--muted)">Le robot est dessiné dans la vue actuelle (angle et étape) : tourne-le avant d'ouvrir cet outil.</div>
+    <h3>Fond</h3>
+    <div class="seg"><button class="bigsw on" data-ic="orange" style="background:linear-gradient(135deg,#FFB547,#FF7A1A)" title="Orange"></button>
+      <button class="bigsw" data-ic="ciel" style="background:linear-gradient(135deg,#CFEFFF,#6EC3F0)" title="Bleu ciel"></button></div>
+    <h3>Style</h3>
+    <div class="seg" id="iStyle"><button class="btn on" data-is="tenons">Tenons LEGO</button><button class="btn" data-is="degrade">Dégradé</button><button class="btn" data-is="uni">Uni</button></div>
+    <h3>Format</h3>
+    <div class="seg" id="iFmt"><button class="btn on" data-if="1080x1080">Carré</button><button class="btn" data-if="1920x1080">Paysage</button><button class="btn" data-if="1080x1350">Portrait</button><button class="btn" data-if="2480x3508">A4</button></div>
+    <h3>Texte</h3>
+    <label class="ck"><input type="checkbox" id="iTxt" checked> Afficher le texte</label>
+    <input type="text" id="iTitle" placeholder="Titre">
+    <input type="text" id="iSub" placeholder="Sous-titre" value="EuraTech'Kids">
+    <label class="ck"><input type="checkbox" id="iShadow" checked> Ombre au sol</label>
+    <div class="row" style="margin-top:8px"><button class="btn pri" id="iSave">⬇ Télécharger le PNG</button><button class="btn" id="iCopy">Copier</button></div>
+    <div style="font-size:12px;color:var(--ok)" id="iMsg"></div>
+    <button class="btn" id="iClose" style="margin-top:auto">Fermer</button>
+  </div>
+</div></div>
+<div id="vid">
+  <div id="vidBar"><span class="rec" id="vidDot"></span><span id="vidTxt">Montage…</span><button class="btn" id="vStop" style="padding:4px 10px">■ Arrêter</button></div>
+  <div class="vbox">
+    <b style="font-size:16px">Vidéo de montage</b>
+    <div style="font-size:12px;color:var(--muted)">Les pièces tombent étape par étape et le robot se construit sous tes yeux, pendant que la caméra tourne autour.</div>
+    <h3>Vitesse</h3>
+    <div class="seg" id="vSpeed"><button class="btn" data-vs="0.6">Normale</button><button class="btn on" data-vs="0.35">Rapide</button><button class="btn" data-vs="0.18">Très rapide</button></div>
+    <h3>Fond</h3>
+    <div class="seg" id="vBg"><button class="bigsw on" data-vb="#FFA640" style="background:#FFA640" title="Orange"></button><button class="bigsw" data-vb="#9ED8F7" style="background:#9ED8F7" title="Bleu ciel"></button><button class="bigsw" data-vb="cur" style="background:repeating-linear-gradient(45deg,#fff 0 6px,#e7ebf1 6px 12px)" title="Fond actuel"></button></div>
+    <h3>Format</h3>
+    <div class="seg" id="vFmt"><button class="btn on" data-vf="1280x720">Paysage 16:9</button><button class="btn" data-vf="1080x1080">Carré</button><button class="btn" data-vf="720x1280">Vertical (stories)</button></div>
+    <label class="ck"><input type="checkbox" id="vBounce" checked> Rebond des pièces à l'arrivée</label>
+    <label class="ck"><input type="checkbox" id="vSpin" checked> Caméra qui tourne autour du robot</label>
+    <label class="ck"><input type="checkbox" id="vEnd" checked> Tour d'honneur du robot terminé à la fin</label>
+    <div style="font-size:12.5px;color:var(--muted)" id="vInfo"></div>
+    <div class="row" style="margin-top:6px"><button class="btn" id="vPreview">▶ Aperçu</button><button class="btn pri" id="vRec">⏺ Enregistrer la vidéo</button></div>
+    <video id="vVideo" controls playsinline style="display:none"></video>
+    <div class="row" id="vDlRow" style="display:none"><button class="btn pri" id="vSave">⬇ Télécharger la vidéo</button><span style="font-size:12px" id="vMsg"></span></div>
+    <button class="btn" id="vClose" style="align-self:flex-start;margin-top:6px">Fermer</button>
+  </div>
+</div>
+<script type="text/plain" id="defaultModel">__MODEL__</script>
+<script type="application/json" id="embeddedParts">__PARTS__</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+__CORE__
+</script>
+<script>
+__IOZIP__
+</script>
+<script>
+__GEN__
+</script>
+<script>
+__APP__
+</script>
+</body>
+</html>
