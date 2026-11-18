@@ -223,13 +223,15 @@
 <div id="design" class="vid-like" style="position:fixed;inset:0;background:rgba(20,24,34,.55);display:none;align-items:center;justify-content:center;z-index:12;padding:16px">
   <div class="vbox">
     <b style="font-size:17px">🛠 Concevoir un robot avec le kit WeDo 2.0</b>
-    <div style="font-size:12.5px;color:var(--muted)">Réponds à 4 questions : le robot est construit uniquement avec les pièces du kit 45300, à partir de montages déjà vérifiés.</div>
+    <div style="font-size:12.5px;color:var(--muted)">Réponds à quelques questions : le robot est construit uniquement avec les pièces du kit 45300, à partir de montages déjà vérifiés.</div>
     <h3>Âge des élèves</h3>
     <div class="seg" id="gAge"><button class="btn on" data-v="7-9">7-9 ans</button><button class="btn" data-v="9-11">9-11 ans</button><button class="btn" data-v="11+">11 ans et +</button></div>
     <h3>Nombre de pièces</h3>
     <div class="seg" id="gSize"><button class="btn" data-v="petit">Moins de 30</button><button class="btn on" data-v="moyen">Environ 50</button><button class="btn" data-v="grand">60 et +</button></div>
     <h3>Forme du véhicule</h3>
-    <div class="seg" id="gForm"><button class="btn on" data-v="tracteur">🚜 Tracteur (4 roues)</button><button class="btn" data-v="bolide">🏎️ Bolide (2 roues + patin)</button></div>
+    <div class="seg" id="gForm"><button class="btn on" data-v="tracteur">🚜 Tracteur (4 roues)</button><button class="btn" data-v="bolide">🏎️ Bolide (4 roues ou patin)</button></div>
+    <h3>Place du hub</h3>
+    <div class="seg" id="gHub"><button class="btn on" data-v="">🎲 Au hasard</button><button class="btn" data-v="avant">Avant</button><button class="btn" data-v="centre">Centre</button><button class="btn" data-v="arriere">Arrière</button></div>
     <h3>Transmission</h3>
     <div class="seg" id="gDrive"><button class="btn on" data-v="engrenages">⚙️ Engrenages</button><button class="btn" data-v="elastique">➰ Élastique</button></div>
     <h3>Type de robot</h3>
@@ -237,7 +239,7 @@
     <h3>Nom (facultatif)</h3>
     <input type="text" id="gName" placeholder="Laisse vide pour un nom surprise" style="font:inherit;font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:9px">
     <div class="row" style="margin-top:10px"><button class="btn pri" id="gGo">✨ Générer le robot</button><button class="btn" id="gClose">Fermer</button></div>
-    <div style="font-size:12px;color:var(--muted)">L'élastique ajoute environ 7 pièces (poulies + axe des roues) et protège le moteur : il patine si le robot est bloqué. Animal et machine arrivent bientôt.</div>
+    <div style="font-size:12px;color:var(--muted)">L'élastique ajoute environ 7 pièces (poulies + axe des roues) et protège le moteur : il patine si le robot est bloqué. Chaque nouvelle variante change la carrosserie (ajouts, style, place du hub) et jamais le même nombre de pièces. Le petit bolide garde le hub au centre. Animal et machine arrivent bientôt.</div>
   </div>
 </div>
 <div id="toast"></div>

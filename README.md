@@ -64,14 +64,15 @@ Ce qu'il fait :
 
 ## Variantes du générateur (variants.py + studio3d/gen.js)
 Chaque variante garde le mécanisme (moteur, transmission, roues) mais change la carrosserie :
-- **arrière du bolide** : patin, ou essieu à 2 petites roues (bolide 4 roues) ;
+- **arrière du bolide** : patin, ou essieu à 2 petites roues (bolide 4 roues, 3 fois sur 4) ;
+- **place du hub** : avant, centre ou arrière (choix « Place du hub » dans le formulaire, au hasard par défaut) ;
 - **style** tiré au hasard (costaud, futuriste, chantier, course, fantaisie), qui oriente le choix des ajouts ;
 - **ajouts** (17 types : blocs, tourelles, feux, radars, ailes, pentes, briques Technic…) posés par paires symétriques sur les tenons libres ;
 - **2e étage** : un ajout peut en porter un autre, dans la hauteur libre mesurée au-dessus ;
 - jamais deux fois le même nombre de pièces ni la même combinaison pour un même réglage (historique dans le Studio).
 
-Chaîne : `node tools/bases.mjs` (bases sans ajouts) → `python3 variants.py` (poses pré-vérifiées : appui complet sur des tenons libres, aucune collision avec la base, symétrique ; hauteur libre au-dessus) → `studio3d/variants.json` (136 Ko), intégré par `python3 tools/build.py modele.ldr sortie.html`.
-Contrôle : `node tools/variantes-test.mjs 10 && python3 tools/verifie-variantes.py` → 120 variantes, 0 îlot, 0 collision (18/11/2026). Aperçu : `python3 tools/apercu.py sortie.png modele.ldr…`.
+Chaîne : `node tools/bases.mjs` (bases sans ajouts) → `python3 variants.py` (poses pré-vérifiées : appui complet sur des tenons libres, aucune collision avec la base, symétrique ; hauteur libre au-dessus) → `studio3d/variants.json` (46 bases, 30 poses max par sorte d'ajout, 272 Ko), intégré par `python3 tools/build.py modele.ldr sortie.html`.
+Contrôle : `node tools/variantes-test.mjs 10 && python3 tools/verifie-variantes.py` → 300 variantes, 0 îlot, 0 collision (18/11/2026). Aperçu : `python3 tools/apercu.py sortie.png modele.ldr…`.
 
 ## Limites connues
 - Les liaisons « contact » sont une approximation à surveiller.

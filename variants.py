@@ -188,6 +188,22 @@ def solve_base(path):
         out.append([c['a'], c['k'], *key3(c['t']), ren[mirror[i]], c['h']])
     return out
 
+def prune(out, cap=30, seed=0):
+    """Garde au plus `cap` poses par sorte d'ajout (paires symétriques entières), pour alléger la page."""
+    rng = np.random.default_rng(seed)
+    pairs = {}
+    for i, p in enumerate(out): pairs.setdefault(min(i, p[5]), set()).update({i, p[5]})
+    by = {}
+    for k, s in pairs.items(): by.setdefault(out[k][0], []).append(sorted(s))
+    keep = []
+    for a, grp in by.items():
+        rng.shuffle(grp); n = 0
+        for g in grp:
+            if n >= cap: break
+            keep += g; n += len(g)
+    keep = sorted(keep); ren = {o: i for i, o in enumerate(keep)}
+    return [out[i][:5] + [ren[out[i][5]]] + out[i][6:] for i in keep]
+
 def catalog(lib):
     """Catalogue exporté pour gen.js : pièces locales + boîte englobante de chaque pièce."""
     res = []
@@ -206,7 +222,7 @@ if __name__ == '__main__':
     res = {'cat': catalog(lib), 'bases': {}}
     for f in sorted(Path('/tmp/v').glob('base-*.ldr')):
         k = f.stem[5:].replace('-', '|')
-        res['bases'][k] = solve_base(str(f))
+        res['bases'][k] = prune(solve_base(str(f)))
         print(k, len(res['bases'][k]), 'poses, hauteur libre moy.', round(float(np.mean([x[6] for x in res['bases'][k]])), 1), dict(Counter(CAT[x[0]][0] for x in res['bases'][k])))
     Path('studio3d/variants.json').write_text(json.dumps(res, separators=(',', ':')))
     print('taille', Path('studio3d/variants.json').stat().st_size // 1024, 'Ko')

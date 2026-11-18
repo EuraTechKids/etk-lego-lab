@@ -934,10 +934,10 @@ $('#bDel').onclick = async () => {
 };
 
 // ---------- Conception de robots ----------
-const GEN = { age: '7-9', size: 'moyen', drive: 'engrenages', type: 'vehicule', form: 'tracteur' };
+const GEN = { age: '7-9', size: 'moyen', drive: 'engrenages', type: 'vehicule', form: 'tracteur', hub: '' };
 let genOpts = null;
-['gAge', 'gSize', 'gDrive', 'gType', 'gForm'].forEach((id) => {
-  const key = { gAge: 'age', gSize: 'size', gDrive: 'drive', gType: 'type', gForm: 'form' }[id];
+['gAge', 'gSize', 'gDrive', 'gType', 'gForm', 'gHub'].forEach((id) => {
+  const key = { gAge: 'age', gSize: 'size', gDrive: 'drive', gType: 'type', gForm: 'form', gHub: 'hub' }[id];
   document.querySelectorAll('#' + id + ' button').forEach((b) => b.onclick = () => {
     if (b.disabled) return; GEN[key] = b.dataset.v;
     document.querySelectorAll('#' + id + ' button').forEach((x) => x.classList.toggle('on', x === b));
@@ -959,7 +959,7 @@ async function ensurePartsFor(ldr) {
 const genHist = {};
 async function runGenerator(opts) {
   genOpts = opts;
-  const hk = [opts.form, opts.drive, opts.size].join('|');
+  const hk = [opts.form, opts.drive, opts.size, opts.hub || ''].join('|');
   const h = genHist[hk] || (genHist[hk] = { avoid: [], avoidSig: [] });
   const r = RobotGen.generate(Object.assign({}, opts, { avoid: h.avoid, avoidSig: h.avoidSig }));
   h.avoid.push(r.nParts); h.avoidSig.push(r.sig);
@@ -974,7 +974,7 @@ async function runGenerator(opts) {
 }
 $('#gGo').onclick = () => {
   $('#design').style.display = 'none';
-  runGenerator({ age: GEN.age, size: GEN.size, drive: GEN.drive, form: GEN.form, name: $('#gName').value.trim() || null, seed: (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0 });
+  runGenerator({ age: GEN.age, size: GEN.size, drive: GEN.drive, form: GEN.form, hub: GEN.hub || undefined, name: $('#gName').value.trim() || null, seed: (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0 });
 };
 $('#bReroll').onclick = () => { if (genOpts) runGenerator(Object.assign({}, genOpts, { name: $('#gName').value.trim() || null, seed: (Date.now() ^ Math.floor(Math.random() * 1e9)) >>> 0 })); };
 

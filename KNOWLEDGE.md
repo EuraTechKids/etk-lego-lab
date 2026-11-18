@@ -50,3 +50,13 @@ Pièces les plus utilisées : cheville 2780 (×50), plaque 1×2 3023 (×37), pen
 - Dans le kit WeDo, il reste peu de grosses briques une fois la base construite (2 à 4 briques 2×4, 2 briques 1×4, 2 à 4 briques Technic). Le volume ajouté est donc limité : la variété vient surtout de la disposition et du 2e étage.
 - Le bolide accepte l'essieu arrière du tracteur (3710 + 3010 + 3701 + axe 44294 + petites roues). Les feux 3062b passent alors en z 150 sur les plaques.
 - Le tube central sous une brique (section de rayon 4) n'est pas un emplacement de tenon.
+
+## Place du hub (validée sur 46 bases, 0 îlot, 0 collision)
+- Le hub (6×8 tenons, x ±60, z ±80) repose sur 2 ou 4 briques 3001 (réhausses) posées sur le plateau ; sa position z doit être un multiple de 20.
+- Tracteur : arrière z -60 (réhausses -60/-20), centre z -20 (-40/0), avant z 20 (20/60). Cabine avancée : pas de pont 3666, le capot reste tenu par le moteur.
+- Bolide moyen/grand : avant z -40 (-60/-20), centre 0 (plateau entier), arrière z 40 (20/60). Le petit bolide garde le hub au centre (plateau trop court).
+
+## Retours de Mathieu (18/11/2026)
+- Préfère le bolide 4 roues au bolide à patin : tiré 3 fois sur 4.
+- Variantes appréciées : bolides 4 roues (styles course et futuriste), tracteurs à cabine arrière avec ajouts de chantier.
+- Aime que la place du hub change d'une variante à l'autre.

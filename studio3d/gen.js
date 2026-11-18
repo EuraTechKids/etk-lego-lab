@@ -157,7 +157,11 @@ const RobotGen = (function () {
     S(...deckZ.map((z) => P('3709b', 191, 0, -8, z)));
     const tractor = opts.form === 'tracteur';
     // arrière du bolide : patin, ou essieu à petites roues (montage de l'avant du tracteur)
-    const rear = tractor ? 'roues' : (opts.rear || (rand() < 0.5 ? 'patin' : 'roues'));
+    const rear = tractor ? 'roues' : (opts.rear || (rand() < 0.75 ? 'roues' : 'patin'));   // Mathieu préfère le bolide 4 roues
+    // place du hub : arrière / centre / avant (le petit bolide garde le hub au centre, plateau trop court)
+    const HUBS = tractor ? { arriere: [-60, [-60, -20]], centre: [-20, [-40, 0]], avant: [20, [20, 60]] }
+      : size === 'petit' ? { centre: [0, deckZ] } : { avant: [-40, [-60, -20]], centre: [0, deckZ], arriere: [40, [20, 60]] };
+    const hubPos = HUBS[opts.hub] ? opts.hub : pick(Object.keys(HUBS));
     if (!tractor && rear === 'patin') {
       // 3. Patin arrière
       S(P('3023b', 15, -10, 56, 70), P('3023b', 15, -10, 56, 90), P('2654', 0, -10, 64, 80));
@@ -178,20 +182,20 @@ const RobotGen = (function () {
       // petites roues (jante 55982 + pneu 92402), montage repris de TekNo
       S(P('55982', 15, 56, 34, 140, [[0, 0, -1], [1, 0, 0], [0, -1, 0]]), P('92402', 0, 56, 34, 140, RYn),
         P('55982', 15, -56, 34, 140, [[0, 0, 1], [1, 0, 0], [0, 1, 0]]), P('92402', 0, -56, 34, 140, RYp));
-      // pont entre le plateau et le capot
-      S(P('3666', 15, -20, -16, 80, RYp), P('3666', 15, 20, -16, 80, RYp));
+      // pont entre le plateau et le capot (pas de place quand la cabine est à l'avant)
+      if (hubPos !== 'avant') S(P('3666', 15, -20, -16, 80, RYp), P('3666', 15, 20, -16, 80, RYp));
     }
     // 4. Roues
     const wx = elastic ? 90 : 59.02, wz = elastic ? -120 : -60;
     S(P('55982', 15, wx, 26, wz, RYn), P('56891', 0, wx, 26, wz, [[0, 0, -1], [-1, 0, 0], [0, 1, 0]]),
       P('55982', 15, -wx - 0.62, 26, wz, RYp), P('56891', 0, -wx - 0.62, 26, wz, [[0, 0, 1], [-1, 0, 0], [0, -1, 0]]));
     // 5. Réhausse + hub
-    const riserZ = tractor ? [-60, -20] : deckZ;
+    const riserZ = HUBS[hubPos][1];
     const riserCols = riserZ.length === 2 ? pick([[322, 322], [191, 191], [191, 322]])
       : pick([[322, 191, 191, 322], [191, 322, 322, 191], [191, 191, 191, 191], [322, 191, 322, 191]]);
     S(...riserZ.map((z, i) => P('3001', riserCols[i], 0, -32, z)));
     const H = -104;
-    const hz = tractor ? -60 : 0; // centre du hub (cabine au-dessus des roues arrière pour le tracteur)
+    const hz = HUBS[hubPos][0]; // centre du hub
     const mul = (A, B) => A.map((row, i) => [0, 1, 2].map((j) => row[0] * B[0][j] + row[1] * B[1][j] + row[2] * B[2][j]));
     S(P('19071c01', 15, 0, H, hz, tractor ? R180 : I));
     // pièces dans le repère du hub (tourné de 180° pour le tracteur : les yeux regardent vers le capot)
@@ -233,7 +237,7 @@ const RobotGen = (function () {
       const [lo0, hi0] = { petit: [2, 9], moyen: [4, 14], grand: [6, 18] }[size];
       const hi = Math.max(lo0 + 3, Math.min(hi0, cap - nb)), lo = Math.min(lo0, hi - 3);
       const extra = Math.max(1, lo + Math.floor(rand() * (hi - lo + 1)) + boost);
-      const key = (tractor ? 'tracteur' : 'bolide') + '|' + (opts.drive === 'elastique' ? 'elastique' : 'engrenages') + '|' + size + (tractor ? '' : '|' + rear);
+      const key = (tractor ? 'tracteur' : 'bolide') + '|' + (opts.drive === 'elastique' ? 'elastique' : 'engrenages') + '|' + size + (tractor ? '' : '|' + rear) + '|' + hubPos;
       const r = addOns(key, rand, stock, extra, style);
       steps.push(...r.steps); sig = r.sig;
     }
@@ -258,7 +262,7 @@ const RobotGen = (function () {
     }
     const ageTxt = { '7-9': '7-9 ans', '9-11': '9-11 ans', '11+': '11 ans et plus' }[opts.age] || '';
     return {
-      ldr: lines.join('\n') + '\n', name, nParts, style, sig, nSteps: merged.length, kitOk: !over.length, over,
+      ldr: lines.join('\n') + '\n', name, nParts, style, sig, hubPos, rear, nSteps: merged.length, kitOk: !over.length, over,
       desc: `${tractor ? 'Tracteur 4 roues' : rear === 'roues' ? 'Bolide 4 roues' : 'Véhicule roulant'}${style ? ' ' + STYLE_NAMES[style] : ''} ${opts.drive === 'elastique' ? 'à élastique' : 'à engrenages'} de ${nParts} pièces pour les ${ageTxt}, généré avec le kit WeDo 2.0.`,
     };
   }
