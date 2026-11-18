@@ -1,0 +1,264 @@
+[
+ {
+  "model": "walkbotgenerator_Copy.ldr",
+  "pieces": 95,
+  "connexions": 128,
+  "types": {
+   "rotule": 1,
+   "tenon": 85,
+   "cheville": 18,
+   "axe": 6,
+   "axe-libre": 8,
+   "axe-centre": 2,
+   "centre": 2,
+   "contact": 6
+  },
+  "sans_info": [
+   "32270.dat",
+   "4265c.dat",
+   "4593.dat"
+  ],
+  "bloc_principal": 95,
+  "ilots": []
+ },
+ {
+  "model": "moto1.ldr",
+  "pieces": 69,
+  "connexions": 88,
+  "types": {
+   "cheville": 26,
+   "tenon": 20,
+   "axe-libre": 17,
+   "axe": 5,
+   "axe-centre": 8,
+   "contact": 12
+  },
+  "sans_info": [
+   "32270.dat",
+   "4265c.dat",
+   "92402.dat"
+  ],
+  "bloc_principal": 69,
+  "ilots": []
+ },
+ {
+  "model": "RobotLogoEuratechKids_Copy.ldr",
+  "pieces": 104,
+  "connexions": 151,
+  "types": {
+   "rotule": 2,
+   "tenon": 97,
+   "axe-libre": 17,
+   "axe": 17,
+   "cheville": 4,
+   "axe-centre": 5,
+   "contact": 9
+  },
+  "sans_info": [
+   "32270.dat",
+   "92402.dat"
+  ],
+  "bloc_principal": 104,
+  "ilots": []
+ },
+ {
+  "model": "MinerRobot_Copy.ldr",
+  "pieces": 103,
+  "connexions": 149,
+  "types": {
+   "rotule": 2,
+   "tenon": 103,
+   "axe": 5,
+   "cheville": 16,
+   "axe-libre": 9,
+   "axe-centre": 3,
+   "contact": 11
+  },
+  "sans_info": [
+   "32270.dat",
+   "56891.dat"
+  ],
+  "bloc_principal": 103,
+  "ilots": []
+ },
+ {
+  "model": "Chrismastree.ldr",
+  "pieces": 69,
+  "connexions": 92,
+  "types": {
+   "rotule": 4,
+   "tenon": 40,
+   "cheville": 10,
+   "axe": 7,
+   "axe-libre": 15,
+   "contact": 16
+  },
+  "sans_info": [],
+  "bloc_principal": 69,
+  "ilots": []
+ },
+ {
+  "model": "MinerRobot_Copy.ldr",
+  "pieces": 103,
+  "connexions": 149,
+  "types": {
+   "rotule": 2,
+   "tenon": 103,
+   "axe": 5,
+   "cheville": 16,
+   "axe-libre": 9,
+   "axe-centre": 3,
+   "contact": 11
+  },
+  "sans_info": [
+   "32270.dat",
+   "56891.dat"
+  ],
+  "bloc_principal": 103,
+  "ilots": []
+ },
+ {
+  "model": "follow_BlackLine.ldr",
+  "pieces": 49,
+  "connexions": 55,
+  "types": {
+   "tenon": 26,
+   "axe-libre": 5,
+   "axe": 10,
+   "cheville": 2,
+   "axe-centre": 5,
+   "contact": 7
+  },
+  "sans_info": [
+   "32270.dat",
+   "4265c.dat",
+   "56891.dat"
+  ],
+  "bloc_principal": 49,
+  "ilots": []
+ },
+ {
+  "model": "VernyWedo.ldr",
+  "pieces": 132,
+  "connexions": 173,
+  "types": {
+   "rotule": 2,
+   "tenon": 115,
+   "cheville": 17,
+   "axe": 18,
+   "axe-libre": 4,
+   "axe-centre": 7,
+   "contact": 10
+  },
+  "sans_info": [
+   "32270.dat",
+   "56891.dat",
+   "92402.dat"
+  ],
+  "bloc_principal": 132,
+  "ilots": []
+ },
+ {
+  "model": "Monkey.ldr",
+  "pieces": 77,
+  "connexions": 105,
+  "types": {
+   "tenon": 59,
+   "cheville": 6,
+   "axe": 9,
+   "axe-libre": 8,
+   "contact": 23
+  },
+  "sans_info": [],
+  "bloc_principal": 77,
+  "ilots": []
+ },
+ {
+  "model": "MadRobot.ldr",
+  "pieces": 82,
+  "connexions": 114,
+  "types": {
+   "tenon": 67,
+   "cheville": 10,
+   "axe": 5,
+   "axe-libre": 15,
+   "axe-centre": 4,
+   "contact": 13
+  },
+  "sans_info": [
+   "92402.dat"
+  ],
+  "bloc_principal": 82,
+  "ilots": []
+ },
+ {
+  "model": "SantaFarm.ldr",
+  "pieces": 155,
+  "connexions": 203,
+  "types": {
+   "tenon": 83,
+   "axe-libre": 10,
+   "axe": 14,
+   "cheville": 9,
+   "axe-centre": 5,
+   "contact": 82
+  },
+  "sans_info": [
+   "209.dat",
+   "32270.dat",
+   "4265c.dat"
+  ],
+  "bloc_principal": 155,
+  "ilots": []
+ },
+ {
+  "model": "santaskiing.ldr",
+  "pieces": 106,
+  "connexions": 154,
+  "types": {
+   "tenon": 107,
+   "cheville": 19,
+   "axe-libre": 4,
+   "axe": 5,
+   "axe-centre": 1,
+   "contact": 18
+  },
+  "sans_info": [
+   "32270.dat"
+  ],
+  "bloc_principal": 106,
+  "ilots": []
+ },
+ {
+  "model": "FightBot.ldr",
+  "pieces": 113,
+  "connexions": 156,
+  "types": {
+   "tenon": 96,
+   "cheville": 28,
+   "axe-libre": 12,
+   "axe": 16,
+   "axe-centre": 4
+  },
+  "sans_info": [
+   "32270.dat",
+   "56891.dat"
+  ],
+  "bloc_principal": 113,
+  "ilots": []
+ },
+ {
+  "model": "toupiSpinner.ldr",
+  "pieces": 70,
+  "connexions": 107,
+  "types": {
+   "tenon": 82,
+   "cheville": 7,
+   "axe-libre": 6,
+   "axe": 12
+  },
+  "sans_info": [],
+  "bloc_principal": 70,
+  "ilots": []
+ }
+]

@@ -22,3 +22,18 @@ Unités LDraw (LDU) : 1 tenon = 20, hauteur brique = 24, plaque = 8. Y vers le b
 
 ## Robots de référence (galerie)
 MinerRobot, TekNo, walkbot generator, FightBot, Chrismastree, follow BlackLine, MadRobot, Monkey, moto1, SantaFarm, santaskiing, toupiSpinner, VernyWedo (+ Le Petit Bolide, généré).
+
+## Statistiques de la galerie (13 robots, 1 224 pièces, 1 675 connexions)
+Connexions : tenons 58 %, chevilles 10 %, axes 16 % (dont 7 % axes libres), rotules < 1 %, liaisons « contact » 12 % (surtout chaîne SantaFarm, pneus).
+Pièces les plus utilisées : cheville 2780 (×50), plaque 1×2 3023 (×37), pente incurvée 42022 (×34), pente 45° 3040 (×34), axe 2 32062 (×29), plaque 1×4 3710 (×29), brique Technic 1×2 3700 (×29), poulie 4185 (×28).
+
+## Bibliothèque de modules (modules/index.json — 42 modules)
+- **articulation/antenne** : FightBot/submodel group 2 (7 p), MadRobot/submodel group 3 (7 p), Monkey/jambes1 (7 p), VernyWedo/submodel group 3 (9 p), moto1/submodel group 3 (5 p)
+- **bras** : Monkey/arm1 (7 p), Monkey/arm2 (7 p)
+- **engrenage** : Chrismastree/submodel group 1 (9 p), MadRobot/submodel group 1 (6 p), RobotLogoEuratechKids/submodel group 1 (4 p), RobotLogoEuratechKids/submodel group 3 (3 p), VernyWedo/submodel group 1 (3 p), follow_BlackLine/submodel group 1 (7 p), moto1/submodel group 2 (7 p), santaskiing/submodel group 1 (2 p)
+- **jambe** : Monkey/jambes1 (7 p)
+- **motorisation** : Chrismastree/submodel group 1 (9 p), MadRobot/submodel group 1 (6 p), RobotLogoEuratechKids/submodel group 3 (3 p), VernyWedo/submodel group 1 (3 p), follow_BlackLine/submodel group 3 (4 p), moto1/submodel group 2 (7 p)
+- **poulie** : FightBot/submodel group 1 (26 p)
+- **roue** : RobotLogoEuratechKids/submodel group 2 (2 p)
+- **structure/déco** : Chrismastree/submodel group 11 (21 p), Chrismastree/submodel group 2 (10 p), Chrismastree/submodel group 3 (7 p), Chrismastree/submodel group 5 (5 p), Chrismastree/submodel group 6 (8 p), Chrismastree/submodel group 7 (2 p), Chrismastree/submodel group 8 (2 p), Chrismastree/submodel group 9 (2 p), Chrismastree/submodel group 10 (2 p), Monkey/1 (4 p), Monkey/2 (4 p), SantaFarm/submodel group 1 (6 p), SantaFarm/submodel group 3 (2 p), SantaFarm/submodel group 2 (5 p), VernyWedo/submodel group 2 (3 p), VernyWedo/submodel group 4 (7 p), VernyWedo/submodel group 5 (7 p), follow_BlackLine/submodel group 4 (2 p), moto1/submodel group 1 (4 p), walkbotgenerator/submodel group 1 (5 p), walkbotgenerator/submodel group 2 (5 p)
+- **yeux/visage** : MadRobot/submodel group 2 (5 p), Monkey/eyes (4 p), santaskiing/submodel group 2 (30 p)

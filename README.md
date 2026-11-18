@@ -27,6 +27,24 @@ Ce qu'il fait :
 | Le Petit Tracteur (élastique) | 60 | 86 | 0 |
 | Contre-test (2 pièces déplacées) | 60 | 80 | 2 détectés ✓ |
 
+## Galerie de Mathieu (iocheck.py, 18/11/2026)
+`python3 iocheck.py *.io --out modeles --json tests/resultats-galerie.json`
+| Robot | Pièces | Connexions | Îlots | dont « contact » |
+|---|---|---|---|---|
+| walkbotgenerator_Copy | 95 | 128 | 0 | 6 |
+| moto1 | 69 | 88 | 0 | 12 |
+| RobotLogoEuratechKids_Copy | 104 | 151 | 0 | 9 |
+| MinerRobot_Copy | 103 | 149 | 0 | 11 |
+| Chrismastree | 69 | 92 | 0 | 16 |
+| follow_BlackLine | 49 | 55 | 0 | 7 |
+| VernyWedo | 132 | 173 | 0 | 10 |
+| Monkey | 77 | 105 | 0 | 23 |
+| MadRobot | 82 | 114 | 0 | 13 |
+| SantaFarm | 155 | 203 | 0 | 82 |
+| santaskiing | 106 | 154 | 0 | 18 |
+| FightBot | 113 | 156 | 0 | 0 |
+| toupiSpinner | 70 | 107 | 0 | 0 |
+
 ## Limites connues
 - Pas encore de détection des collisions réelles (pièces qui se traversent).
 - Les liaisons « contact » sont une approximation à surveiller.

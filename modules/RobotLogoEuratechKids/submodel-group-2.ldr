@@ -1,0 +1,12 @@
+0 FILE submodel-group-2.ldr
+0 Module submodel group 2 (robot RobotLogoEuratechKids)
+0 SubModel Group 2
+0 Name:  SubModel Group 2
+0 Author:  
+0 IsSubModel True
+0 CustomBrick
+0 FlexibleBrickControlPointUnitLength -1
+0 NumOfBricks:  2
+1 11 0.000000 -38.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 0.000000 0.000000 0.000000 1.000000 92402.dat
+1 1 0.000000 -38.000000 0.000000 0.000000 -1.000000 0.000000 1.000000 0.000000 0.000000 0.000000 0.000000 1.000000 55982.dat
+0 NOFILE
