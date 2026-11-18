@@ -62,8 +62,16 @@ Ce qu'il fait :
 - Les tubes sous les plaques et les gorges de poulie sont ignorés.
 - `modules/ancres.json` liste les accroches libres (position, direction, pièce) des 42 modules. C'est la base du générateur v2.
 
+## stability.py — le robot tient-il debout ?
+`python3 stability.py modele.ldr [...]`
+- Centre de gravité estimé (hub avec piles 100 g, moteur 35 g, pneus ; le reste au volume).
+- Position de repos : face d'appui de l'enveloppe convexe (inclinaison de 20° au plus).
+- Alerte si le centre de gravité est à moins de 15 LDU du bord de la zone d'appui.
+- Galerie : 12 robots stables sur 13 (la toupie ne l'est pas, c'est voulu).
+
 ## Variantes du générateur (variants.py + studio3d/gen.js)
 Chaque variante garde le mécanisme (moteur, transmission, roues) mais change la carrosserie :
+- **3 formes** : tracteur, bolide, moto side-car ;
 - **arrière du bolide** : patin, ou essieu à 2 petites roues (bolide 4 roues, 3 fois sur 4) ;
 - **place du hub** : avant, centre ou arrière (choix « Place du hub » dans le formulaire, au hasard par défaut) ;
 - **style** tiré au hasard (costaud, futuriste, chantier, course, fantaisie), qui oriente le choix des ajouts ;
@@ -72,7 +80,7 @@ Chaque variante garde le mécanisme (moteur, transmission, roues) mais change la
 - jamais deux fois le même nombre de pièces ni la même combinaison pour un même réglage (historique dans le Studio).
 
 Chaîne : `node tools/bases.mjs` (bases sans ajouts) → `python3 variants.py` (poses pré-vérifiées : appui complet sur des tenons libres, aucune collision avec la base, symétrique ; hauteur libre au-dessus) → `studio3d/variants.json` (46 bases, 30 poses max par sorte d'ajout, 272 Ko), intégré par `python3 tools/build.py modele.ldr sortie.html`.
-Contrôle : `node tools/variantes-test.mjs 10 && python3 tools/verifie-variantes.py` → 300 variantes, 0 îlot, 0 collision (18/11/2026). Aperçu : `python3 tools/apercu.py sortie.png modele.ldr…`.
+Contrôle : `node tools/variantes-test.mjs 10 && python3 tools/verifie-variantes.py` → 216 variantes (3 formes), 0 îlot, 0 collision, toutes stables (18/11/2026). Aperçu : `python3 tools/apercu.py sortie.png modele.ldr…`.
 
 ## Limites connues
 - Les liaisons « contact » sont une approximation à surveiller.

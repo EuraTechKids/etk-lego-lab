@@ -21,6 +21,6 @@ for n,f in enumerate(files):
         cols+=list(np.clip(base[None]*sh[:,None],0,1))
     pc=Poly3DCollection(polys,facecolors=cols,edgecolors='none',linewidths=0); pc.set_alpha(1); ax.add_collection3d(pc)
     P=np.concatenate(polys).reshape(-1,3); c=(P.max(0)+P.min(0))/2; r=(P.max(0)-P.min(0)).max()/2
-    ax.set_xlim(c[0]-r,c[0]+r); ax.set_ylim(c[1]-r,c[1]+r); ax.set_zlim(c[2]-r,c[2]+r); ax.view_init(22,-130); ax.axis('off')
+    ax.set_xlim(c[0]-r,c[0]+r); ax.set_ylim(c[1]-r,c[1]+r); ax.set_zlim(c[2]-r,c[2]+r); ax.view_init(22,float(__import__('os').environ.get('AZIM','-130'))); ax.axis('off')
     ax.set_title(open(f).readline()[2:].strip()+f" · {len(refs)} p.",fontsize=10)
 plt.tight_layout(); plt.savefig(sys.argv[1],dpi=80)

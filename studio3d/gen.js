@@ -11,6 +11,7 @@ const RobotGen = (function () {
     '2654|0': 6, '3001|191': 4, '3001|322': 2, '87087|15': 2, '14769p01|15': 2, '4286|191': 4, '4287|27': 4, '85984|191': 4,
     '32059|27': 2, '2458|71': 4, '3737|0': 2, '4185|43': 6, '3666|15': 4, '3010|322': 2, '3701|27': 4, '92402|0': 4, '32016|322': 2, '2780|0': 8, '32192|27': 2, '3749|19': 4, '62462|10': 2,
   };
+  const NAMES_SIDECAR = ['Le Side-Car Rouge', 'Moto-Copain', 'Le Baroudeur', 'Side-Car Express', 'La Moto du Facteur', 'Duo Pétaradant'];
   const NAMES_TRACTEUR = ['Le Petit Tracteur', 'Tracto-Malin', 'Le Laboureur', 'Gros Ronron', 'Le Tracteur Orange', 'Fermier Turbo', 'Le Roule-Champs'];
   const NAMES = ['Le Petit Bolide', 'Turbo Tortue', 'La Fusée Orange', 'Le Rapido', 'Zigzag', 'Le Scarabée Turbo', 'Bip-Bip',
     'Le Roule-Malin', 'Flash Citron', 'Le Bolide Azur', 'Rouli-Roulant', 'Le Petit Explorateur'];
@@ -153,13 +154,14 @@ const RobotGen = (function () {
     }
     S(P('64799', 71, 0, 0, -60));
     // 2. Plateau
-    const deckZ = size === 'petit' && opts.form !== 'tracteur' ? [-20, 20] : [-60, -20, 20, 60];
+    const sidecar = opts.form === 'sidecar';   // moto side-car : châssis du tracteur, moto à gauche, nacelle (hub) à droite
+    const deckZ = size === 'petit' && opts.form === 'bolide' ? [-20, 20] : [-60, -20, 20, 60];
     S(...deckZ.map((z) => P('3709b', 191, 0, -8, z)));
-    const tractor = opts.form === 'tracteur';
+    const tractor = opts.form === 'tracteur' || sidecar;
     // arrière du bolide : patin, ou essieu à petites roues (montage de l'avant du tracteur)
     const rear = tractor ? 'roues' : (opts.rear || (rand() < 0.75 ? 'roues' : 'patin'));   // Mathieu préfère le bolide 4 roues
     // place du hub : arrière / centre / avant (le petit bolide garde le hub au centre, plateau trop court)
-    const HUBS = tractor ? { arriere: [-60, [-60, -20]], centre: [-20, [-40, 0]], avant: [20, [20, 60]] }
+    const HUBS = sidecar ? { arriere: [-60, [-60, -20]], centre: [-20, [-40, 0]] } : tractor ? { arriere: [-60, [-60, -20]], centre: [-20, [-40, 0]], avant: [20, [20, 60]] }
       : size === 'petit' ? { centre: [0, deckZ] } : { avant: [-40, [-60, -20]], centre: [0, deckZ], arriere: [40, [20, 60]] };
     const hubPos = HUBS[opts.hub] ? opts.hub : pick(Object.keys(HUBS));
     if (!tractor && rear === 'patin') {
@@ -179,8 +181,9 @@ const RobotGen = (function () {
       S(P('3010', 322, -20, 0, 140, RYp), P('3010', 322, 20, 0, 140, RYp));
       S(P('3701', 27, -20, 24, 140, RYn), P('3701', 27, 20, 24, 140, RYn));
       S(P('44294', 71, 0, 34, 140));
-      // petites roues (jante 55982 + pneu 92402), montage repris de TekNo
-      S(P('55982', 15, 56, 34, 140, [[0, 0, -1], [1, 0, 0], [0, -1, 0]]), P('92402', 0, 56, 34, 140, RYn),
+      // petites roues (jante 55982 + pneu 92402), montage repris de TekNo ; side-car : seule la roue avant de la moto (gauche)
+      if (sidecar) S(P('55982', 15, -56, 34, 140, [[0, 0, 1], [1, 0, 0], [0, 1, 0]]), P('92402', 0, -56, 34, 140, RYp));
+      else S(P('55982', 15, 56, 34, 140, [[0, 0, -1], [1, 0, 0], [0, -1, 0]]), P('92402', 0, 56, 34, 140, RYn),
         P('55982', 15, -56, 34, 140, [[0, 0, 1], [1, 0, 0], [0, 1, 0]]), P('92402', 0, -56, 34, 140, RYp));
       // pont entre le plateau et le capot (pas de place quand la cabine est à l'avant)
       if (hubPos !== 'avant') S(P('3666', 15, -20, -16, 80, RYp), P('3666', 15, 20, -16, 80, RYp));
@@ -197,16 +200,23 @@ const RobotGen = (function () {
     const H = -104;
     const hz = HUBS[hubPos][0]; // centre du hub
     const mul = (A, B) => A.map((row, i) => [0, 1, 2].map((j) => row[0] * B[0][j] + row[1] * B[1][j] + row[2] * B[2][j]));
-    S(P('19071c01', 15, 0, H, hz, tractor ? R180 : I));
+    const hx = sidecar ? 40 : 0; // side-car : le hub (nacelle) est décalé à droite, au-dessus de la grande roue droite
+    S(P('19071c01', 15, hx, H, hz, tractor ? R180 : I));
     // pièces dans le repère du hub (tourné de 180° pour le tracteur : les yeux regardent vers le capot)
-    const h = (f, c, x, y, z, R = I) => tractor ? P(f, c, -x, H + y, hz - z, mul(R180, R)) : P(f, c, x, H + y, hz + z, R);
+    const h = (f, c, x, y, z, R = I) => tractor ? P(f, c, hx - x, H + y, hz - z, mul(R180, R)) : P(f, c, x, H + y, hz + z, R);
+    if (sidecar) {
+      // la moto (côté gauche) : selle sur la réhausse, réservoir, guidon sur le pont
+      S(P('3701', 27, -30, -56, hz + 20, RYn), P('85984', 191, -30, -56, hz + 50, RYn));
+      S(P('3701', 27, -20, -40, 80, RYn), P('32062', 4, -20, -30, 80));
+    }
     // 6. Yeux (+ joues)
     if (size !== 'petit') S(h('4286', 191, 50, 0, -10, R180), h('4286', 191, -50, 0, -10, R180), h('87087', 15, 50, 0, -30), h('87087', 15, -50, 0, -30));
     else S(h('87087', 15, 50, 0, -30), h('87087', 15, -50, 0, -30));
     S(h('14769p01', 15, 60, 20, -48, [[-1, 0, 0], [0, 0, 1], [0, 1, 0]]), h('14769p01', 15, -60, 20, -48, [[0, 0, 1], [1, 0, 0], [0, 1, 0]]));
     // 7. Finitions
     if (size !== 'petit') {
-      if (tractor) S(P('85984', 191, -20, 0, -90), P('85984', 191, 20, 0, -90), P('3062b', 36, -20, -40, 130), P('3062b', 36, 20, -40, 130));
+      if (sidecar) S(P('85984', 191, -20, 0, -90), P('85984', 191, 20, 0, -90), P('3062b', 36, -20, -32, 150), P('3062b', 36, 20, -40, 130));   // phare de la moto + échappement
+      else if (tractor) S(P('85984', 191, -20, 0, -90), P('85984', 191, 20, 0, -90), P('3062b', 36, -20, -40, 130), P('3062b', 36, 20, -40, 130));
       else if (rear === 'patin') S(P('85984', 191, -20, 0, -90), P('85984', 191, 20, 0, -90), P('3062b', 36, -20, -24, 90), P('3062b', 36, 20, -24, 90));
       else S(P('85984', 191, -20, 0, -90), P('85984', 191, 20, 0, -90), P('3062b', 36, -20, -32, 150), P('3062b', 36, 20, -32, 150));
     }
@@ -233,11 +243,11 @@ const RobotGen = (function () {
       steps.flat().forEach((p) => { stock[p.f + '|' + p.c] -= 1; });
       style = pick(Object.keys(STYLES));
       // fourchette d'ajouts : variété, sans trop s'éloigner de la taille demandée (≈30 / ≈50 / 60 et +)
-      const nb = steps.flat().length, cap = { petit: 40, moyen: 62, grand: 999 }[size];
+      const nb = steps.flat().length, cap = { petit: 40, moyen: 70, grand: 999 }[size];
       const [lo0, hi0] = { petit: [2, 9], moyen: [4, 14], grand: [6, 18] }[size];
       const hi = Math.max(lo0 + 3, Math.min(hi0, cap - nb)), lo = Math.min(lo0, hi - 3);
       const extra = Math.max(1, lo + Math.floor(rand() * (hi - lo + 1)) + boost);
-      const key = (tractor ? 'tracteur' : 'bolide') + '|' + (opts.drive === 'elastique' ? 'elastique' : 'engrenages') + '|' + size + (tractor ? '' : '|' + rear) + '|' + hubPos;
+      const key = (sidecar ? 'sidecar' : tractor ? 'tracteur' : 'bolide') + '|' + (opts.drive === 'elastique' ? 'elastique' : 'engrenages') + '|' + size + (tractor ? '' : '|' + rear) + '|' + hubPos;
       const r = addOns(key, rand, stock, extra, style);
       steps.push(...r.steps); sig = r.sig;
     }
@@ -252,7 +262,7 @@ const RobotGen = (function () {
     const use = {};
     merged.flat().forEach((p) => { const k = p.f + '|' + p.c; use[k] = (use[k] || 0) + 1; });
     const over = Object.entries(use).filter(([k, q]) => q > (KIT[k] || 0)).map(([k, q]) => `${k} (${q}/${KIT[k] || 0})`);
-    const name = opts.name || pick(tractor ? NAMES_TRACTEUR : NAMES);
+    const name = opts.name || pick(sidecar ? NAMES_SIDECAR : tractor ? NAMES_TRACTEUR : NAMES);
     const nParts = merged.flat().length;
     const lines = [`0 ${name}`, `0 Name: ${name.replace(/[^A-Za-z0-9]+/g, '')}.ldr`, "0 Author: Claude pour EuraTech'Kids", '0 !LDRAW_ORG Unofficial_Model', ''];
     const fmt = (v) => String(Math.round(v * 1000) / 1000);
@@ -263,7 +273,7 @@ const RobotGen = (function () {
     const ageTxt = { '7-9': '7-9 ans', '9-11': '9-11 ans', '11+': '11 ans et plus' }[opts.age] || '';
     return {
       ldr: lines.join('\n') + '\n', name, nParts, style, sig, hubPos, rear, nSteps: merged.length, kitOk: !over.length, over,
-      desc: `${tractor ? 'Tracteur 4 roues' : rear === 'roues' ? 'Bolide 4 roues' : 'Véhicule roulant'}${style ? ' ' + STYLE_NAMES[style] : ''} ${opts.drive === 'elastique' ? 'à élastique' : 'à engrenages'} de ${nParts} pièces pour les ${ageTxt}, généré avec le kit WeDo 2.0.`,
+      desc: `${sidecar ? 'Moto side-car' : tractor ? 'Tracteur 4 roues' : rear === 'roues' ? 'Bolide 4 roues' : 'Véhicule roulant'}${style ? ' ' + STYLE_NAMES[style] : ''} ${opts.drive === 'elastique' ? 'à élastique' : 'à engrenages'} de ${nParts} pièces pour les ${ageTxt}, généré avec le kit WeDo 2.0.`,
     };
   }
   // Génère une variante ; opts.avoid = nombres de pièces déjà proposés, opts.avoidSig = combinaisons déjà vues

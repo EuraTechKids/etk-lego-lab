@@ -2,7 +2,7 @@
 import { createRequire } from 'module'; const require = createRequire(import.meta.url);
 const G = require('../studio3d/gen.js'); const fs = require('fs');
 const N = +process.argv[2] || 6; fs.rmSync('/tmp/vt', { recursive: true, force: true }); fs.mkdirSync('/tmp/vt');
-for (const form of ['bolide', 'tracteur']) for (const drive of ['engrenages', 'elastique']) for (const size of ['petit', 'moyen', 'grand']) {
+for (const form of ['bolide', 'tracteur', 'sidecar']) for (const drive of ['engrenages', 'elastique']) for (const size of ['petit', 'moyen', 'grand']) {
   const avoid = [], avoidSig = [], info = [];
   for (let i = 0; i < N; i++) {
     const r = G.generate({ age: '9-11', size, drive, form, seed: 1000 + i * 7919, avoid, avoidSig });

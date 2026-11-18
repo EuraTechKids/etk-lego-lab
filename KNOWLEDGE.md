@@ -60,3 +60,15 @@ Pièces les plus utilisées : cheville 2780 (×50), plaque 1×2 3023 (×37), pen
 - Préfère le bolide 4 roues au bolide à patin : tiré 3 fois sur 4.
 - Variantes appréciées : bolides 4 roues (styles course et futuriste), tracteurs à cabine arrière avec ajouts de chantier.
 - Aime que la place du hub change d'une variante à l'autre.
+
+## Moto side-car (18/11/2026)
+- Châssis du tracteur moins la petite roue avant droite. Moto à gauche : grande roue arrière motrice (x -59,6) alignée avec la petite roue avant (x -56). Side-car à droite : grande roue x +59, hub décalé de x +40 (nacelle au-dessus de la roue).
+- Hub décalé de +40 : ses creux restent sur la grille des réhausses (multiple de 20). La colonne de tenons x -30 des réhausses reste libre pour la selle (3701).
+- Guidon : 3701 sur le pont gauche (z 80) + axe 32062. Phare 3062b à z 150 sur la plaque du capot (remplace l'échappement gauche, les 6 briques rondes du kit sont prises en version grande).
+- Stabilité : 3 appuis, centre de gravité vers x +19. Marge 18 à 36 LDU, mieux avec le hub à l'arrière.
+- Limite : un plateau commun de 4 tenons de large, l'allure reste celle d'un petit véhicule asymétrique. À améliorer avec les retours de Mathieu.
+
+## Stabilité (stability.py)
+- Masses : hub avec piles 100 g, moteur 35 g, grand pneu 12 g, petit pneu 5 g ; le reste au volume (brique 2×4 = 2,3 g).
+- Position de repos : face de l'enveloppe convexe tournée vers le bas, inclinée de 20° au plus (MinerRobot repose incliné de 8° sur son patin, comme en vrai).
+- Marge minimale : 15 LDU. 12 robots de la galerie sur 13 sont stables ; la toupie ne l'est pas, ce qui est normal.
